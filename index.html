@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IKKINCHI HAYOT — maktab buyumlari almashinuvi</title>
+<style>
+:root{--green:#27694e;--dark:#20332b;--mint:#eaf3ed;--gold:#e8b753;--muted:#65736b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f8f5;color:var(--dark)}
+header{background:linear-gradient(130deg,#1e563f,#398263);color:white;padding:28px 18px 34px}
+.wrap{max-width:1050px;margin:auto;padding:0 16px}
+.brand{font-size:13px;letter-spacing:2px;font-weight:bold;opacity:.85}
+h1{font-size:clamp(30px,6vw,48px);margin:12px 0 8px}
+header p{max-width:650px;line-height:1.5;margin:0;color:#e1f0e6}
+main{max-width:1050px;margin:22px auto;padding:0 16px}
+.notice{background:#fff6df;border-left:4px solid var(--gold);padding:12px 14px;border-radius:8px;font-size:14px;line-height:1.5;margin-bottom:18px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}
+input,select,textarea,button{font:inherit}
+input,select,textarea{padding:12px;border:1px solid #cbd8ce;border-radius:9px;background:white;min-width:0}
+#search{flex:1;min-width:210px}
+button{border:0;border-radius:9px;padding:12px 16px;background:var(--green);color:white;font-weight:bold;cursor:pointer}
+button.secondary{background:#e2eee6;color:var(--green)}
+.layout{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;align-items:start}
+.panel{background:white;border:1px solid #e0e9e2;border-radius:14px;padding:18px;box-shadow:0 3px 14px #183c2510}
+h2{font-size:20px;margin:0 0 14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.item{border:1px solid #e0e9e2;border-radius:12px;padding:14px;background:white}
+.item .tag{font-size:12px;color:var(--green);font-weight:bold;background:var(--mint);display:inline-block;padding:5px 8px;border-radius:20px}
+.item h3{margin:10px 0 6px;font-size:18px}
+.item p{margin:5px 0;color:var(--muted);font-size:14px;line-height:1.4}
+.item .price{font-weight:bold;color:var(--dark);margin-top:10px}
+form{display:grid;gap:10px}
+form label{font-size:13px;font-weight:bold;color:#43544a}
+form input,form select,form textarea{width:100%;margin-top:5px}
+form textarea{min-height:70px;resize:vertical}
+.small{font-size:12px;color:var(--muted);line-height:1.5}
+.empty{padding:22px;text-align:center;color:var(--muted);background:#f7faf7;border-radius:10px}
+.ad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.ad-card{border:1px solid #d9e8dd;border-radius:12px;padding:14px;background:linear-gradient(145deg,#f7fcf8,#edf6ef)}
+.ad-label{display:inline-block;background:#fff0c9;color:#74520a;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:bold}
+.ad-card h3{margin:10px 0 6px}.ad-card p{font-size:14px;line-height:1.45;color:var(--muted);margin:5px 0}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:28px 16px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.panel{padding:15px}}
+</style></head>
+<body>
+<header><div class="wrap"><div class="brand">IJTIMOIY-EKOLOGIK STARTAP</div>
+<h1>IKKINCHI HAYOT ♻️</h1><p>Bir inson uchun keraksiz, boshqasi uchun bebaho! Kitoblar, maktab formasi va o‘quv buyumlariga yangi imkoniyat beramiz.</p></div></header>
+<main>
+<div class="notice" id="siteStatus" role="status">Umumiy bazaga ulanmoqda...</div>
+<section class="panel" style="margin-bottom:18px"><h2>Hamkorlar reklamasi</h2><p class="small">Loyihani qo‘llab-quvvatlayotgan tashkilotlar, kitob do‘konlari va foydali xizmatlar haqidagi e’lonlar shu yerda ko‘rsatiladi. Reklama avval maktab mas’uli tomonidan tekshiriladi.</p><div id="ads" class="ad-grid"></div></section>
+<div class="toolbar"><input id="search" placeholder="Buyum nomini qidirish..." aria-label="Qidirish">
+<select id="filter" aria-label="Bo‘lim"><option value="all">Barcha bo‘limlar</option><option>Kitoblar</option><option>Maktab formasi</option><option>Sumka</option><option>O‘quv qurollari</option><option>Boshqa</option></select>
+<button class="secondary" id="reset">Demo ma’lumotlarini tiklash</button></div>
+<div class="layout">
+<section class="panel"><h2>Buyumlar katalogi</h2><div id="cards" class="cards"></div></section>
+<aside class="panel"><h2>Buyum joylashtirish</h2>
+<form id="addForm">
+<label>Buyum nomi<input name="name" maxlength="55" required placeholder="Masalan: 8-sinf biologiya kitobi"></label>
+<label>Bo‘lim<select name="category" required><option>Kitoblar</option><option>Maktab formasi</option><option>Sumka</option><option>O‘quv qurollari</option><option>Boshqa</option></select></label>
+<label>Buyum holati<select name="condition"><option>Yaxshi</option><option>Juda yaxshi</option><option>Yangi</option><option>Ta’mir talab qiladi</option></select></label>
+<label>Hudud<select name="region" required>
+<option value="">Hududni tanlang</option>
+<option>Andijon</option><option>Buxoro</option><option>Farg‘ona</option><option>Jizzax</option>
+<option>Namangan</option><option>Navoiy</option><option>Qashqadaryo</option><option>Qoraqalpog‘iston</option>
+<option>Samarqand</option><option>Sirdaryo</option><option>Surxondaryo</option><option>Toshkent</option>
+<option>Toshkent shahri</option><option>Xorazm</option>
+</select></label>
+<label>Buyum rasmi<input name="photo" type="file" accept="image/jpeg,image/png,image/webp"></label>
+<label>Qisqa izoh<textarea name="description" maxlength="180" placeholder="Masalan: Muqovasi yaxshi, ichida yozuv yo‘q."></textarea></label>
+<button type="submit">E’lonni qo‘shish</button>
+<p class="small">E’lon yuborilganda ism, telefon yoki manzil so‘ralmaydi. Haqiqiy topshirish maktab mas’uli orqali kelishiladi.</p>
+</form></aside></div>
+<section class="panel" style="margin-top:18px"><h2>Reklama qo‘shish / Hamkor bo‘lish</h2>
+<p class="small">Saytni rivojlantirish uchun mahalliy kitob do‘konlari, o‘quv markazlari yoki ekologik tashabbuslar reklama hamkori bo‘lishi mumkin. Reklama joylashtirish bepul yoki homiylik asosida kelishiladi; sayt ichida to‘lov qabul qilinmaydi.</p>
+<form id="adForm">
+<label>Tashkilot yoki loyiha nomi<input name="org" maxlength="60" required placeholder="Masalan: Mahalliy kitob do‘koni"></label>
+<label>Reklama sarlavhasi<input name="title" maxlength="65" required placeholder="Masalan: Kitoblar haftaligi"></label>
+<label>Yo‘nalish<select name="category"><option>Kitob va ta’lim</option><option>Ekologiya</option><option>O‘quv qurollari</option><option>Ijtimoiy tashabbus</option><option>Boshqa</option></select></label>
+<label>Qisqa tavsif<textarea name="description" maxlength="220" required placeholder="Hamkorlik yoki taklif haqida qisqacha yozing."></textarea></label>
+<button type="submit">Reklamani ko‘rib chiqishga yuborish</button>
+<p class="small">Telefon raqami, uy manzili yoki shaxsiy ma’lumot kiritmang. Yuborilgan reklama darhol ommaga chiqmaydi — avval mas’ul katta yoshli shaxs tasdiqlashi kerak. Bu demo versiyada so‘rov faqat shu qurilmada saqlanadi.</p>
+</form><div id="adStatus" class="small" aria-live="polite" style="margin-top:10px"></div></section>
+</main>
+<footer>IKKINCHI HAYOT • Tejamkorlik, mehr-oqibat va ekologik mas’uliyat</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* Supabase public sozlamalari. Secret/service_role kalitini bu yerga yozmang. */
+const SUPABASE_URL = "https://xkiejyxyutthspwqwick.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_gj7LAlxAQIq18teaGYiMMA_01meKLXz";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const TABLE = "hadyalar";
+const BUCKET = "hadya-rasmlar";
+
+const demoAds=[{org:"Loyiha hamkori",title:"Kitobni asrang, bilimni ulashing",category:"Kitob va ta’lim",description:"Yaxshi holatdagi kitoblarni almashish va hadya qilish tashabbusini qo‘llab-quvvatlaymiz."}];
+let ads=JSON.parse(localStorage.getItem("ikkinchiHayotAdsV1")||"null")||demoAds;
+function renderAds(){
+ const root=document.getElementById("ads");root.innerHTML="";
+ if(!ads.length){root.innerHTML='<div class="empty">Hozircha tasdiqlangan reklama yo‘q.</div>';return}
+ ads.forEach(a=>{
+  const d=document.createElement("article");d.className="ad-card";
+  const tag=document.createElement("span");tag.className="ad-label";tag.textContent="HAMKOR E’LONI";d.appendChild(tag);
+  const h=document.createElement("h3");h.textContent=a.title;d.appendChild(h);
+  const p=document.createElement("p");p.textContent=a.description;d.appendChild(p);
+  const f=document.createElement("p");f.textContent=a.org+" • "+a.category;d.appendChild(f);root.appendChild(d);
+ });
+}
+const cards=document.getElementById("cards");
+const search=document.getElementById("search");
+const filter=document.getElementById("filter");
+let items=[];
+
+function showMessage(message, isError=false){
+ let box=document.getElementById("siteStatus");
+ if(!box){box=document.createElement("div");box.id="siteStatus";box.className="notice";document.querySelector("main").prepend(box);}
+ box.textContent=message;
+ if(isError) box.style.borderLeftColor="#b33";
+}
+function render(){
+ const q=search.value.trim().toLowerCase(), f=filter.value;
+ const shown=items.filter(x=>(f==="all"||x.category===f)&&
+  (`${x.title||""} ${x.description||""} ${x.category||""} ${x.region||""}`).toLowerCase().includes(q));
+ cards.innerHTML="";
+ if(!shown.length){cards.innerHTML='<div class="empty">Hozircha mos e’lon topilmadi.</div>';return}
+ shown.forEach(x=>{
+  const d=document.createElement("article");d.className="item";
+  if(x.image_url){
+   const img=document.createElement("img");img.src=x.image_url;img.alt=x.title||"Hadya rasmi";
+   img.loading="lazy";img.style.cssText="width:100%;height:150px;object-fit:cover;border-radius:9px;margin-bottom:10px";
+   d.appendChild(img);
+  }
+  const tag=document.createElement("span");tag.className="tag";tag.textContent=x.category||"Boshqa";d.appendChild(tag);
+  const h=document.createElement("h3");h.textContent=x.title||"Nomsiz buyum";d.appendChild(h);
+  const p1=document.createElement("p");p1.textContent="Holati: "+(x.condition||"Ko‘rsatilmagan");d.appendChild(p1);
+  const p2=document.createElement("p");p2.textContent=x.description||"Izoh kiritilmagan";d.appendChild(p2);
+  const p3=document.createElement("p");p3.className="price";p3.textContent="Hudud: "+(x.region||"Ko‘rsatilmagan");d.appendChild(p3);
+  cards.appendChild(d);
+ });
+}
+async function loadItems(){
+ cards.innerHTML='<div class="empty">E’lonlar yuklanmoqda...</div>';
+ const {data,error}=await supabaseClient.from(TABLE).select("id,title,category,description,region,condition,image_url,created_at,status").eq("status","published").order("created_at",{ascending:false});
+ if(error){cards.innerHTML='<div class="empty">E’lonlarni yuklashda xatolik yuz berdi. Supabase sozlamalarini tekshirish kerak.</div>';showMessage("Supabase bilan ulanish hali sinovdan o‘tmoqda: "+error.message,true);return;}
+ items=data||[];render();showMessage("Umumiy bazadan "+items.length+" ta e’lon yuklandi.");
+}
+document.getElementById("addForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const form=e.currentTarget, submit=form.querySelector('button[type="submit"]');
+ const f=new FormData(form);
+ const title=String(f.get("name")||"").trim();
+ const category=String(f.get("category")||"");
+ const condition=String(f.get("condition")||"");
+ const region=String(f.get("region")||"");
+ const description=String(f.get("description")||"").trim();
+ const photo=f.get("photo");
+ if(!title||!region){showMessage("Buyum nomi va hududni to‘ldiring.",true);return;}
+ if(photo && photo.size>5*1024*1024){showMessage("Rasm hajmi 5 MB dan oshmasligi kerak.",true);return;}
+ if(photo && photo.size && !["image/jpeg","image/png","image/webp"].includes(photo.type)){showMessage("Faqat JPG, PNG yoki WEBP rasm yuklang.",true);return;}
+ submit.disabled=true;submit.textContent="Yuklanmoqda...";
+ try{
+  let image_url=null;
+  if(photo && photo.size){
+   const ext=photo.type==="image/png"?"png":photo.type==="image/webp"?"webp":"jpg";
+   const filePath="items/"+Date.now()+"-"+Math.random().toString(36).slice(2,9)+"."+ext;
+   const {error:uploadError}=await supabaseClient.storage.from(BUCKET).upload(filePath,photo,{contentType:photo.type,upsert:false});
+   if(uploadError) throw uploadError;
+   const {data:publicData}=supabaseClient.storage.from(BUCKET).getPublicUrl(filePath);
+   image_url=publicData.publicUrl;
+  }
+  const payload={title,category,description,region,condition,image_url};
+  const {error}=await supabaseClient.from(TABLE).insert([payload]);
+  if(error) throw error;
+  form.reset();await loadItems();showMessage("E’lon umumiy bazaga muvaffaqiyatli qo‘shildi.");
+ }catch(err){
+  showMessage("E’lon saqlanmadi: "+(err.message||"Noma’lum xatolik")+". Sozlamalarni tekshirish kerak.",true);
+ }finally{
+  submit.disabled=false;submit.textContent="E’lonni qo‘shish";
+ }
+});
+document.getElementById("adForm").addEventListener("submit",e=>{
+ e.preventDefault();const f=new FormData(e.currentTarget);
+ const request={org:String(f.get("org")).trim(),title:String(f.get("title")).trim(),category:f.get("category"),description:String(f.get("description")).trim(),status:"Ko‘rib chiqish kutilmoqda"};
+ const pending=JSON.parse(localStorage.getItem("ikkinchiHayotAdsV1_pending")||"[]");pending.unshift(request);
+ localStorage.setItem("ikkinchiHayotAdsV1_pending",JSON.stringify(pending));e.currentTarget.reset();
+ document.getElementById("adStatus").textContent="Reklama so‘rovi ushbu qurilmada saqlandi va tasdiqlashni kutmoqda. Bu bo‘lim hozircha umumiy bazaga ulanmagan.";
+});
+search.addEventListener("input",render);filter.addEventListener("change",render);
+renderAds();loadItems();
+</script></body></html>
